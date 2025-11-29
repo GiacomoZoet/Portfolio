@@ -22,5 +22,8 @@ import Header from './components/HeaderMenu.vue'
   --font-header: "Pecita", cursive;
   --font-sans: "Nunito", sans-serif;
 }
+body{
+  background-color: #F9F9FC
+}
 </style>
 
