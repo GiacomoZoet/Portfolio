@@ -1,11 +1,16 @@
 <script setup>
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
+const navigateTo = (routeName) => {
+  router.push({name: routeName});
+}
 </script>
 
 <template>
-  <header class="flex items-center h-20 justify-between p-10">
+  <header class="sticky top-0 flex items-center h-[64px] justify-between p-10 bg-[#F9F9FC]">
       <div class="flex items-center">
-        <router-link to="/" class="font-header text-5xl">Giacomo Zoet</router-link>
+        <router-link to="home" class="font-header text-5xl">Giacomo Zoet</router-link>
       </div>
       <nav >
         <ul class="flex items-center w-100 justify-between">

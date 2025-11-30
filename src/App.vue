@@ -22,8 +22,30 @@ import Header from './components/HeaderMenu.vue'
   --font-header: "Pecita", cursive;
   --font-sans: "Nunito", sans-serif;
 }
-body{
-  background-color: #F9F9FC
+
+@utility content-height {
+  height: calc(100vh - 8px);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>
 
