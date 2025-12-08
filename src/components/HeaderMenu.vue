@@ -10,7 +10,7 @@
       <nav >
         <ul class="flex items-center w-60 justify-between">
           <li><router-link to="/">HOME</router-link></li>
-          <li><router-link to="/info">INFO</router-link></li>
+          <li><router-link to="/f1">F1 DATA</router-link></li>
           <li><router-link to="/contact">CONTACT</router-link></li>
         </ul>
       </nav>
