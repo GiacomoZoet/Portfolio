@@ -3,7 +3,11 @@ import Header from './components/HeaderMenu.vue'
 </script>
 
 <template>
-  <Header />
+  <div class="fixed top-0 left-0 w-[100%] z-50 flex justify-center pt-3 px-3">
+    <div class="w-full max-w-6xl px-8">
+      <Header  />
+    </div>
+  </div>
   <router-view />
 </template>
 
@@ -23,8 +27,14 @@ import Header from './components/HeaderMenu.vue'
   --font-sans: "Nunito", sans-serif;
 }
 
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 @utility content-height {
-  height: calc(100vh - 8px);
+  height: calc(100vh - 64px);
 }
 
 .fade-enter-active,
