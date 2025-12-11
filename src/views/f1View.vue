@@ -1,14 +1,20 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
+import driverCard from '../components/driverCard.vue'
 
 const meetings = ref([])
 const selectedMeetingKey = ref("")
+const sessions = ref([])
+const selectedSessionKey = ref("")
 
 const emit = defineEmits(["update:meetingKey"])
 
 const allYears = ref([2023, 2024, 2025])
 const year = ref("")
+
+const driverNumbers = ref([1, 4, 5, 6, 7, 10, 12, 14, 16, 18, 22, 23, 27, 30, 31, 44, 55, 63, 81, 87])
+const drivers = ref([])
 
 onMounted(async () => {
 })
@@ -24,9 +30,64 @@ watch(year, async (val) => {
   })
 })
 
-watch(selectedMeetingKey, (val) => {
-  emit("update:meetingKey", val)
+watch(selectedMeetingKey, async (val) => {
+  console.log('selectedMeetingKey changed to:', val)
+  emit('update:meetingKey', val)
+  if (!val) return
+
+  drivers.value = []
+
+  for (const number of driverNumbers.value) {
+    try {
+      const { data } = await axios.get('https://api.openf1.org/v1/drivers', {
+        params: {
+          driver_number: number,
+          session_key: selectedSessionKey.value
+        }
+      })
+      console.log('driver_number', number, 'got', data.length, 'rows')
+      drivers.value.push(...data)
+    } catch (e) {
+      console.error('error for driver_number', number, e)
+    }
+  }
+
+  console.log('final drivers length:', drivers.value.length)
+  const { data } = await axios.get("https://api.openf1.org/v1/sessions", {
+    params: { meeting_key: val }
+  })
+  sessions.value = data.sort((a, b) =>
+    new Date(a.date_start) - new Date(b.date_start)
+  )
+
+  selectedSessionKey.value = ""
+  drivers.value = []
 })
+
+watch(selectedSessionKey, async (val) => {
+  emit('update:sessionKey', val)
+  if (!val) return
+
+  drivers.value = []
+
+  for (const number of driverNumbers.value) {
+    try {
+      const { data } = await axios.get('https://api.openf1.org/v1/drivers', {
+        params: {
+          driver_number: number,
+          session_key: val
+        }
+      })
+      if (data.length > 0) {
+        drivers.value.push(data[0])
+      }
+    } catch (e) {
+      console.error('error for driver_number', number, e)
+    }
+  }
+})
+
+
 </script>
 
 <template>
@@ -59,5 +120,22 @@ watch(selectedMeetingKey, (val) => {
         </option>
       </select>
     </label>
+    <label>
+      Select Session:
+      <select v-model="selectedSessionKey">
+        <option disabled value="">-- choose a Session --</option>
+        <option
+          v-for="session in sessions"
+          :key="session.session_key"
+          :value="session.session_key"
+        >
+          {{ session.session_name }}
+        </option>
+      </select>
+    </label>
+
+  </div>
+  <div class="flex justify-center items-center flex-wrap gap-10 " >
+    <driverCard class="flex" v-for="driver in drivers" :key="driver.id" :driver="driver">></driverCard>
   </div>
 </template>
